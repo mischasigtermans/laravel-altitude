@@ -6,6 +6,7 @@ use Altitude\Commands\SyncCommand;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
 class AltitudeServiceProvider extends ServiceProvider
@@ -23,6 +24,7 @@ class AltitudeServiceProvider extends ServiceProvider
 
             if (config('altitude.auto_sync')) {
                 $this->registerBoostHook();
+                $this->syncOnFirstInstall();
             }
         }
     }
@@ -34,5 +36,12 @@ class AltitudeServiceProvider extends ServiceProvider
                 Artisan::call('altitude:sync', ['--force' => true, '--quiet' => true]);
             }
         });
+    }
+
+    private function syncOnFirstInstall(): void
+    {
+        if (! File::exists(base_path('.claude/agents'))) {
+            Artisan::call('altitude:sync', ['--quiet' => true]);
+        }
     }
 }

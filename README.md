@@ -37,7 +37,36 @@ This keeps agents and documentation in sync whenever you run `composer update`.
 
 ```bash
 php artisan altitude:sync         # Sync new agents only
-php artisan altitude:sync --force # Overwrite existing agents     
+php artisan altitude:sync --force # Overwrite existing agents
+```
+
+## How Syncing Works
+
+### On Install
+
+When you install Altitude, agents sync automatically on the next console command if `.claude/agents` doesn't exist yet. This ensures you get agents immediately without needing to run a separate command.
+
+### On Boost Updates
+
+When `boost:install` or `boost:update` runs, Altitude syncs with `--force`, updating all agents to the latest versions.
+
+### File Conflicts
+
+Altitude agents use common names like `architect`, `database`, and `livewire`. If you have custom agents with the same names, they will be overwritten on boost updates.
+
+**To keep custom agents**, use different names:
+
+```
+.claude/agents/
+├── architect.md        # Altitude (will be updated)
+├── my-architect.md     # Your custom version (safe)
+└── project-rules.md    # Your custom agent (safe)
+```
+
+Alternatively, disable auto-sync and manage updates manually:
+
+```env
+ALTITUDE_AUTO_SYNC=false
 ```
 
 ## Why Altitude?
