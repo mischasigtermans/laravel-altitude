@@ -1,0 +1,53 @@
+{
+    "name": "mischasigtermans/laravel-altitude",
+    "description": "Claude Code agents for the TALL stack, powered by Laravel Boost",
+    "keywords": ["laravel", "tall", "livewire", "claude", "ai", "agents"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mischa Sigtermans",
+            "email": "mischa@sigtermans.me"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0",
+        "laravel/boost": "^1.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.20",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Altitude\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Altitude\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "format": "vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Altitude\\AltitudeServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
