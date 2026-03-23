@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-03-23
+
+### Added
+- Laravel 13 support
+- Laravel Boost 2.x support
+
 ## [0.1.1] - 2025-01-03
 
 ### Added
