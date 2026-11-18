@@ -22,11 +22,30 @@ class AltitudeServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([SyncCommand::class]);
 
+            $this->registerUpgradeNotice();
+
             if (config('altitude.auto_sync')) {
                 $this->registerBoostHook();
                 $this->syncOnFirstInstall();
             }
         }
+    }
+
+    private function registerUpgradeNotice(): void
+    {
+        Event::listen(CommandFinished::class, function (CommandFinished $event) {
+            if (in_array($event->command, ['boost:install', 'boost:update'])) {
+                $event->output->writeln([
+                    '',
+                    '  Altitude 1.0 is out: a Claude Code plugin replaces these agents and commands,',
+                    '  and Boost now ships the stack skills. A ^0.2 constraint never installs it. Upgrade with:',
+                    '',
+                    '    composer require --dev mischasigtermans/laravel-altitude:^1.0',
+                    '    php artisan altitude:install',
+                    '',
+                ]);
+            }
+        });
     }
 
     private function registerBoostHook(): void
