@@ -13,9 +13,4 @@ class TestCase extends Orchestra
             AltitudeServiceProvider::class,
         ];
     }
-
-    protected function defineEnvironment($app): void
-    {
-        $app['config']->set('altitude.auto_sync', false);
-    }
 }

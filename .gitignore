@@ -5,5 +5,5 @@ composer.lock
 phpunit.xml
 .idea/
 .DS_Store
-.claude/
-.ai/
+/.claude/
+/.ai/
