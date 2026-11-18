@@ -15,7 +15,7 @@ Altitude moves into a Claude Code plugin that works in any repository. This pack
 
 **Added**
 - `php artisan altitude:install`: removes 0.x files, adds the package to `boost.json`, runs `boost:update` and installs the Claude Code plugin. Options: `--scope`, `--no-plugin`, `--marketplace`.
-- A cleanup that deletes 0.x files byte-identical to what 0.x published (LF or CRLF) and keeps edited ones. It also runs silently after every successful `boost:install` and `boost:update`.
+- A cleanup that deletes 0.x files byte-identical to what 0.x published (LF or CRLF) and keeps edited ones. It also runs after every successful `boost:install` and `boost:update`, and lists what it removed and kept.
 - A stack-neutral Laravel guideline in `resources/boost/guidelines/core.blade.php`, with sections that switch on per installed package.
 - Laravel 13 in the test matrix.
 

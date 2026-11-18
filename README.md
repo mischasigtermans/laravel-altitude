@@ -27,11 +27,11 @@ php artisan altitude:install
 The plugin is the main product. It installs once per machine and works in every project, Laravel or not:
 
 ```bash
-claude plugin marketplace add mischasigtermans/altitude
-claude plugin install altitude@altitude
+claude plugin marketplace add mischasigtermans/by-mischa
+claude plugin install altitude@by-mischa
 ```
 
-Its skills run as `/altitude:<name>`. See the [plugin repository](https://github.com/mischasigtermans/altitude) for what it ships.
+It lives on the `by-mischa` marketplace. Its skills run as `/altitude:<name>`. See the [plugin repository](https://github.com/mischasigtermans/altitude) for what it ships.
 
 ## What `altitude:install` does
 
@@ -45,7 +45,7 @@ It runs three steps and reports each one:
 |---|---|
 | `--scope=user\|project` | Skip the question and install the plugin in this scope. |
 | `--no-plugin` | Skip the plugin step. |
-| `--marketplace=` | Install from another marketplace, such as a local checkout. Defaults to `mischasigtermans/altitude`. |
+| `--marketplace=` | Add the `by-mischa` marketplace from another source, such as a local checkout. Defaults to `mischasigtermans/by-mischa`. |
 
 The command exits non-zero only when a step fails. A skipped plugin step isn't a failure.
 

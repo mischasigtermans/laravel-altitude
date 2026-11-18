@@ -14,7 +14,7 @@ class InstallCommand extends Command
     protected $signature = 'altitude:install
                             {--scope= : Where to install the Claude Code plugin: user or project}
                             {--no-plugin : Skip the Claude Code plugin}
-                            {--marketplace=mischasigtermans/altitude : The marketplace that holds the plugin}';
+                            {--marketplace=mischasigtermans/by-mischa : The marketplace that holds the plugin}';
 
     protected $description = 'Remove Altitude 0.x files, add Altitude to Boost and install the Claude Code plugin';
 
@@ -122,7 +122,7 @@ class InstallCommand extends Command
 
         $commands = [
             ['claude', 'plugin', 'marketplace', 'add', $this->option('marketplace'), '--scope', $scope],
-            ['claude', 'plugin', 'install', 'altitude@altitude', '--scope', $scope],
+            ['claude', 'plugin', 'install', 'altitude@by-mischa', '--scope', $scope],
         ];
 
         if (! $interactive || ! $this->claudeIsInstalled()) {

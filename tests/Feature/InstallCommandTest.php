@@ -180,8 +180,8 @@ it('fails on an invalid boost.json', function () {
 
 it('prints the plugin commands when claude is not on the PATH', function () {
     $this->artisan('altitude:install', ['--scope' => 'user'])
-        ->expectsOutputToContain('claude plugin marketplace add mischasigtermans/altitude --scope user')
-        ->expectsOutputToContain('claude plugin install altitude@altitude --scope user')
+        ->expectsOutputToContain('claude plugin marketplace add mischasigtermans/by-mischa --scope user')
+        ->expectsOutputToContain('claude plugin install altitude@by-mischa --scope user')
         ->assertSuccessful();
 
     Process::assertNothingRan();
@@ -191,7 +191,7 @@ it('prints the plugin commands when the run is not interactive', function () {
     claudeOnPath(true);
 
     $this->artisan('altitude:install', ['--no-interaction' => true])
-        ->expectsOutputToContain('claude plugin install altitude@altitude --scope user')
+        ->expectsOutputToContain('claude plugin install altitude@by-mischa --scope user')
         ->assertSuccessful();
 
     Process::assertNothingRan();
@@ -202,7 +202,7 @@ it('prints the plugin commands without asking when no terminal is attached', fun
     terminal(false);
 
     $this->artisan('altitude:install')
-        ->expectsOutputToContain('claude plugin install altitude@altitude --scope user')
+        ->expectsOutputToContain('claude plugin install altitude@by-mischa --scope user')
         ->assertSuccessful();
 
     Process::assertNothingRan();
@@ -213,11 +213,11 @@ it('installs the plugin through claude when it is on the PATH', function () {
 
     $this->artisan('altitude:install', ['--scope' => 'project', '--marketplace' => '/path/to/altitude'])
         ->expectsOutputToContain('running claude plugin marketplace add /path/to/altitude --scope project')
-        ->expectsOutputToContain('running claude plugin install altitude@altitude --scope project')
+        ->expectsOutputToContain('running claude plugin install altitude@by-mischa --scope project')
         ->assertSuccessful();
 
     assertRan(['claude', 'plugin', 'marketplace', 'add', '/path/to/altitude', '--scope', 'project']);
-    assertRan(['claude', 'plugin', 'install', 'altitude@altitude', '--scope', 'project']);
+    assertRan(['claude', 'plugin', 'install', 'altitude@by-mischa', '--scope', 'project']);
 });
 
 it('tells the user each teammate runs both commands after a project install', function () {
@@ -225,14 +225,14 @@ it('tells the user each teammate runs both commands after a project install', fu
 
     $this->artisan('altitude:install', ['--scope' => 'project'])
         ->expectsOutputToContain('Each teammate runs these two commands once')
-        ->expectsOutputToContain('  claude plugin marketplace add mischasigtermans/altitude --scope project')
-        ->expectsOutputToContain('  claude plugin install altitude@altitude --scope project')
+        ->expectsOutputToContain('  claude plugin marketplace add mischasigtermans/by-mischa --scope project')
+        ->expectsOutputToContain('  claude plugin install altitude@by-mischa --scope project')
         ->assertSuccessful();
 });
 
 it('names the teammate step when it prints the commands for a project install', function () {
     $this->artisan('altitude:install', ['--scope' => 'project'])
-        ->expectsOutputToContain('claude plugin install altitude@altitude --scope project')
+        ->expectsOutputToContain('claude plugin install altitude@by-mischa --scope project')
         ->expectsOutputToContain('Each teammate runs these two commands once')
         ->assertSuccessful();
 
@@ -240,7 +240,7 @@ it('names the teammate step when it prints the commands for a project install', 
 
     Artisan::call('altitude:install', ['--scope' => 'project']);
 
-    expect(substr_count(Artisan::output(), 'claude plugin install altitude@altitude --scope project'))->toBe(2);
+    expect(substr_count(Artisan::output(), 'claude plugin install altitude@by-mischa --scope project'))->toBe(2);
 });
 
 it('leaves out the teammate step for a user install', function () {
@@ -261,7 +261,7 @@ it('asks for the scope and recommends user', function () {
         ])
         ->assertSuccessful();
 
-    assertRan(['claude', 'plugin', 'install', 'altitude@altitude', '--scope', 'user']);
+    assertRan(['claude', 'plugin', 'install', 'altitude@by-mischa', '--scope', 'user']);
 });
 
 it('stops and fails when a claude command fails', function () {
