@@ -1,6 +1,10 @@
 <?php
 
+use Altitude\AltitudeServiceProvider;
+use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 beforeEach(function () {
     File::deleteDirectory(base_path('.claude'));
@@ -104,4 +108,39 @@ it('does not sync package-specific agents when package is not installed', functi
     } else {
         File::delete($lockPath);
     }
+});
+
+it('tells users about Altitude 1.0 after a Boost run', function () {
+    $output = new BufferedOutput;
+
+    event(new CommandFinished('boost:update', new ArrayInput([]), $output, 0));
+
+    expect($output->fetch())
+        ->toContain('Altitude 1.0 is out')
+        ->toContain('composer require --dev mischasigtermans/laravel-altitude:^1.0')
+        ->toContain('php artisan altitude:install');
+});
+
+it('gives the upgrade commands on Laravel 12.41.1 and newer', function () {
+    $notice = implode("\n", AltitudeServiceProvider::upgradeNotice('12.41.1'));
+
+    expect($notice)
+        ->toContain('composer require --dev mischasigtermans/laravel-altitude:^1.0')
+        ->not->toContain('upgrade Laravel first');
+});
+
+it('names the Laravel requirement first on older Laravel versions', function () {
+    $notice = implode("\n", AltitudeServiceProvider::upgradeNotice('11.45.3'));
+
+    expect($notice)
+        ->toContain('Altitude 1.0 needs Laravel 12.41.1 or newer')
+        ->toContain('upgrade Laravel first');
+});
+
+it('stays quiet after other commands', function () {
+    $output = new BufferedOutput;
+
+    event(new CommandFinished('migrate', new ArrayInput([]), $output, 0));
+
+    expect($output->fetch())->toBe('');
 });
