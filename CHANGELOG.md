@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [0.2.1] - Unreleased
 
 ### Added
-- A notice after `boost:install` and `boost:update` that Altitude 1.0 is out, with the two upgrade commands. A `^0.2` constraint never resolves to 1.0, so `composer update` alone won't get there.
+- A notice after `boost:install` and `boost:update` that Altitude 1.0 is out, with the two upgrade commands. A `^0.2` constraint never resolves to 1.0, so `composer update` alone won't get there. On Laravel versions older than 12.41.1 the notice says to upgrade Laravel first, since 1.0 requires it.
 
 ## [0.2.0] - 2026-03-23
 
