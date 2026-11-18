@@ -1,309 +1,86 @@
-# Altitude
+# Altitude for Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/mischasigtermans/laravel-altitude.svg?style=flat-square)](https://packagist.org/packages/mischasigtermans/laravel-altitude)
 [![Total Downloads](https://img.shields.io/packagist/dt/mischasigtermans/laravel-altitude.svg?style=flat-square)](https://packagist.org/packages/mischasigtermans/laravel-altitude)
+[![Tests](https://img.shields.io/github/actions/workflow/status/mischasigtermans/laravel-altitude/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/mischasigtermans/laravel-altitude/actions/workflows/tests.yml)
 
-Opinionated Claude Code agents and commands for TALL stack development.
+Opinionated AI add-ons for Laravel, built on Laravel Boost.
 
-> **Note:** This package is opinionated. It assumes you're building with the TALL stack (Tailwind, Alpine, Livewire, Laravel) and optionally Filament, Flux UI, and Pest. If you use a different stack, this package may not be for you.
-
-Altitude provides specialized AI agents that focus on decision-making and workflow patterns while [Laravel Boost](https://laravel.com/ai/boost) handles version-specific documentation via MCP.
+Altitude is a Claude Code plugin with workflow skills, review agents and hooks that work in any repository. This package is its thin Laravel layer: it adds Altitude's Laravel guideline to [Laravel Boost](https://laravel.com/ai/boost), so every agent Boost configures reads it, and it removes what Altitude 0.x copied into your app.
 
 ## Installation
 
 ```bash
-composer require mischasigtermans/laravel-altitude --dev
+composer require --dev mischasigtermans/laravel-altitude
+php artisan altitude:install
 ```
 
-## Quick Start
-
-Altitude syncs automatically when Laravel Boost runs `boost:install` or `boost:update`.
-
-**Recommended:** Add to your `composer.json` scripts for automatic updates:
-
-```json
-{
-    "scripts": {
-        "post-update-cmd": [
-            "@php artisan boost:update --quiet"
-        ]
-    }
-}
-```
-
-This keeps agents and documentation in sync whenever you run `composer update`.
-
-**Manual sync:** For more control, run directly:
-
-```bash
-php artisan altitude:sync         # Sync new agents only
-php artisan altitude:sync --force # Overwrite existing agents
-```
-
-## How Syncing Works
-
-### On Install
-
-When you install Altitude, agents sync automatically on the next console command if `.claude/agents` doesn't exist yet. This ensures you get agents immediately without needing to run a separate command.
-
-### On Boost Updates
-
-When `boost:install` or `boost:update` runs, Altitude syncs with `--force`, updating all agents to the latest versions.
-
-### File Conflicts
-
-Altitude agents use common names like `architect`, `database`, and `livewire`. If you have custom agents with the same names, they will be overwritten on boost updates.
-
-**To keep custom agents**, use different names:
-
-```
-.claude/agents/
-├── architect.md        # Altitude (will be updated)
-├── my-architect.md     # Your custom version (safe)
-└── project-rules.md    # Your custom agent (safe)
-```
-
-Alternatively, disable auto-sync and manage updates manually:
-
-```env
-ALTITUDE_AUTO_SYNC=false
-```
-
-## Why Altitude?
-
-AI assistants need context about your stack to give good advice. But documentation changes between versions, and copy-pasting docs into prompts wastes tokens and goes stale.
-
-Altitude solves this by:
-
-- **Separating concerns** — Agents handle decisions and workflow, Boost handles docs
-- **Package-aware publishing** — Only get agents for packages you actually use
-- **Workflow commands** — Common tasks like `/ship`, `/test`, `/debug` work out of the box
-- **Never stale** — Agents reference `mcp__laravel-boost__search-docs` instead of embedding version-specific code
-
-## Agents
-
-Altitude publishes agents based on your installed packages:
-
-### Always Included
-
-| Agent | Purpose |
-|-------|---------|
-| `architect` | Multi-file features and architecture decisions |
-| `database` | Schema design, migrations, Eloquent models |
-| `docs` | Documentation lookup via MCP tools |
-| `security` | Security audits and vulnerability checks |
-
-### Package-Specific
-
-| Package | Agents |
-|---------|--------|
-| `livewire/livewire` | `livewire`, `alpine` |
-| `livewire/flux` | `flux` |
-| `filament/filament` | `filament` |
-| `pestphp/pest` | `pest` |
-| `laravel/reverb` | `realtime` |
-
-### How Agents Work
-
-Each agent defines:
-1. **Responsibilities** — What it handles
-2. **Decision guides** — Common choices and tradeoffs
-3. **Workflow** — Steps to follow
-4. **References** — Points to `mcp__laravel-boost__search-docs` for implementation details
-
-Example usage in Claude Code:
-
-```
-@architect I need to add a booking system with events, tickets, and payments
-```
-
-```
-@livewire Create a component for filtering products by category
-```
-
-```
-@database Design a schema for multi-tenant organizations with team members
-```
-
-## Commands
-
-Workflow commands are always published:
-
-| Command | Purpose |
-|---------|---------|
-| `/ship` | Commit, push, and create pull request |
-| `/test` | Run tests related to current changes |
-| `/debug` | Debug using logs and application state |
-| `/review` | Review code for quality and security |
-| `/catchup` | Resume work after a break |
-| `/pint` | Format code with Laravel Pint |
-
-### Command Examples
-
-```
-/ship "Add user profile page"
-```
-
-```
-/test --all
-```
-
-```
-/debug "500 error on checkout"
-```
-
-## Optional: Enhanced Debugging
-
-### Herd Pro
-
-If you're using [Laravel Herd Pro](https://herd.laravel.com), the `/debug` command can access logs and dumps via MCP:
-
-| Tool | Purpose |
-|------|---------|
-| `mcp__herd__get-logs` | Application logs |
-| `mcp__herd__get-dumps` | Dump output |
-
-### Telescope MCP
-
-If you have [Laravel Telescope](https://laravel.com/docs/telescope) installed, add the MCP wrapper for Claude access:
-
-```bash
-composer require lucianotonet/laravel-telescope-mcp --dev
-```
-
-| Tool | Purpose |
-|------|---------|
-| `mcp__laravel-telescope__requests` | HTTP requests with exceptions |
-| `mcp__laravel-telescope__exceptions` | Stack traces and error details |
-| `mcp__laravel-telescope__queries` | Slow and failed database queries |
-| `mcp__laravel-telescope__jobs` | Failed queue jobs |
-| `mcp__laravel-telescope__logs` | Application logs |
-| `mcp__laravel-telescope__mail` | Sent emails |
-
-Without these tools, `/debug` falls back to reading `storage/logs/laravel.log`.
-
-## What Gets Published
-
-```
-.ai/
-└── guidelines/
-    └── tall-stack.md          # Stack overview and conventions
-
-.claude/
-├── agents/
-│   ├── alpine.md              # Alpine.js interactivity
-│   ├── architect.md           # Architecture decisions
-│   ├── database.md            # Schema and migrations
-│   ├── docs.md                # Documentation lookup
-│   ├── filament.md            # Filament admin panels
-│   ├── flux.md                # Flux UI components
-│   ├── livewire.md            # Livewire components
-│   ├── pest.md                # Testing with Pest
-│   ├── realtime.md            # WebSockets with Reverb
-│   └── security.md            # Security auditing
-└── commands/
-    ├── catchup.md             # Resume after break
-    ├── debug.md               # Debug with logs/Telescope
-    ├── pint.md                # Code formatting
-    ├── review.md              # Code review
-    ├── ship.md                # Commit and PR workflow
-    └── test.md                # Run related tests
-```
-
-## Configuration
-
-Publish the config to customize:
-
-```bash
-php artisan vendor:publish --tag=altitude-config
-```
-
-```php
-// config/altitude.php
-return [
-    // Disable auto-sync on boost:install/update
-    'auto_sync' => env('ALTITUDE_AUTO_SYNC', true),
-
-    // Map packages to agents
-    'agents' => [
-        'livewire/livewire' => ['livewire', 'alpine'],
-        'livewire/flux' => ['flux'],
-        'filament/filament' => ['filament'],
-        'pestphp/pest' => ['pest'],
-        'laravel/reverb' => ['realtime'],
-    ],
-
-    // Agents always published
-    'always' => [
-        'architect',
-        'database',
-        'docs',
-        'security',
-    ],
-
-    // Commands always published
-    'always_commands' => [
-        'ship',
-        'test',
-        'debug',
-        'review',
-        'catchup',
-        'pint',
-    ],
-];
-```
-
-## Re-syncing
-
-When you add packages, re-run sync to get their agents:
-
-```bash
-composer require filament/filament
-php artisan altitude:sync
-```
-
-Use `--force` to update existing agents with latest versions:
-
-```bash
-php artisan altitude:sync --force
-```
-
-## Use Cases
-
-### New Feature Development
-
-```
-@architect I need to add a document management system with versioning
-```
-
-```
-@livewire Create the upload component based on the architecture plan
-```
-
-### Debugging Production Issues
-
-```
-/debug "500 error on checkout page"
-```
-
-### Code Review Before PR
-
-```
-/review
-/ship "Add document versioning"
-```
-
-### Resuming After a Break
-
-```
-/catchup
-```
-
-## Requirements
+### Requires
 
 - PHP 8.2+
-- Laravel 11 or 12
-- [Laravel Boost](https://laravel.com/ai/boost) (installed automatically)
+- Laravel 11, 12 or 13
+- Laravel Boost 2.5+ (installed with the package)
+- Claude Code, for the plugin
+
+## The plugin
+
+The plugin is the main product. It installs once per machine and works in every project, Laravel or not:
+
+```bash
+claude plugin marketplace add mischasigtermans/altitude
+claude plugin install altitude@altitude
+```
+
+Its skills run as `/altitude:<name>`. See the [plugin repository](https://github.com/mischasigtermans/altitude) for what it ships.
+
+## What `altitude:install` does
+
+It runs three steps and reports each one:
+
+1. **Cleanup.** Removes the files Altitude 0.x published that you never edited. See below.
+2. **Boost.** Adds `mischasigtermans/laravel-altitude` to the `packages` list in `boost.json` and runs `boost:update`, so the guideline lands in your agent files. Without a `boost.json`, it tells you to run `php artisan boost:install` and select Altitude.
+3. **Plugin.** Asks whether to install the plugin for your user (recommended) or for this project. When you run it in a terminal and `claude` is on your PATH, it runs the two commands above with that `--scope`. Otherwise, as in a script or with `--no-interaction`, it prints them for you with `--scope user`.
+
+| Option | Effect |
+|---|---|
+| `--scope=user\|project` | Skip the question and install the plugin in this scope. |
+| `--no-plugin` | Skip the plugin step. |
+| `--marketplace=` | Install from another marketplace, such as a local checkout. Defaults to `mischasigtermans/altitude`. |
+
+The command exits non-zero only when a step fails. A skipped plugin step isn't a failure.
+
+## What the cleanup touches
+
+Altitude 0.x copied these files into your app:
+
+- `.claude/agents/`: `alpine`, `architect`, `database`, `docs`, `filament`, `flux`, `livewire`, `pest`, `realtime`, `security`
+- `.claude/commands/`: `catchup`, `debug`, `pint`, `review`, `ship`, `test`
+- `.ai/guidelines/tall-stack.md`
+- `config/altitude.php`
+
+The cleanup deletes a file only when its bytes match what 0.x published, with LF or CRLF line endings. A file you edited stays where it is, and the command lists it so you can decide. It removes `.claude/agents` and `.claude/commands` only when they end up empty. Nothing else is read or written.
+
+The same cleanup runs silently after every successful `boost:install` and `boost:update`. Altitude never writes a file while your app boots.
+
+## The guideline
+
+The guideline covers how to work in a Laravel app: fixing causes, keeping changes small, test-first bug fixes and a few Laravel traps. Sections for Livewire, Flux, Tailwind, Vite, Larastan, Pint and Herd only appear when the project uses them. It points agents at the project files the plugin's `init` skill writes: `.ai/guidelines/purpose.md`, `.ai/guidelines/vocabulary.md`, `.ai/guidelines/working.md` and `.ai/protected-surfaces.md`.
+
+To change it for one project, put your own version at:
+
+```
+.ai/guidelines/mischasigtermans/laravel-altitude/core.blade.php
+```
+
+Boost uses that file instead and keeps it across updates.
+
+## Upgrading from 0.2
+
+See [UPGRADE.md](UPGRADE.md).
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md).
 
 ## Credits
 
@@ -311,4 +88,4 @@ php artisan altitude:sync --force
 
 ## License
 
-MIT
+MIT. See [LICENSE](LICENSE).
