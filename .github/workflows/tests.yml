@@ -27,6 +27,8 @@ jobs:
             testbench: 10.*
           - laravel: 11.*
             testbench: 9.*
+            # Every Laravel 11 release carries an open security advisory, which Composer blocks by default.
+            composer-flags: --no-security-blocking
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
@@ -45,7 +47,7 @@ jobs:
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --prefer-stable --prefer-dist --no-interaction
+          composer update --prefer-stable --prefer-dist --no-interaction ${{ matrix.composer-flags }}
 
       - name: Execute tests
         run: vendor/bin/pest
