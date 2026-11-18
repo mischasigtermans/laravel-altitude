@@ -11,7 +11,7 @@ Altitude moves into a Claude Code plugin that works in any repository. This pack
 - Removed the `livewire`, `alpine`, `flux`, `filament`, `pest`, `realtime`, `database` and `docs` agents. Boost's own guidelines and skills, and the Boost skills Filament and Echo ship, cover them.
 - Removed `.ai/guidelines/tall-stack.md`. The guideline now ships through Boost as `mischasigtermans/laravel-altitude/core`.
 - Removed `php artisan altitude:sync`, `config/altitude.php` and the `ALTITUDE_AUTO_SYNC` setting.
-- Requires Laravel Boost 2.5 or newer.
+- Requires Laravel Boost 2.5 or newer, and Laravel 12.41.1 or newer. Laravel 11 is dropped: it no longer gets security fixes, and Boost's MCP dependency has moved past it.
 
 **Added**
 - `php artisan altitude:install`: removes 0.x files, adds the package to `boost.json`, runs `boost:update` and installs the Claude Code plugin. Options: `--scope`, `--no-plugin`, `--marketplace`.

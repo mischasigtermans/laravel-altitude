@@ -18,7 +18,7 @@ php artisan altitude:install
 ### Requires
 
 - PHP 8.2+
-- Laravel 11, 12 or 13
+- Laravel 12.41.1+ or 13
 - Laravel Boost 2.5+ (installed with the package)
 - Claude Code, for the plugin
 
